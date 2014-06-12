@@ -726,11 +726,11 @@ module ActiveRecord
           unless binds.empty?
             args = binds.map { |col, val| type_cast(val, col) } + args
           end
-          Rails.logger.debug "LOGGING =====> ABOUT TO QUERY with Args: [#{args}]"
-
-          #log(expand(sql, args), name) do
+          Rails.logger.debug "LOGGING =====> ABOUT TO QUERY [#{sql}] with Args: [#{args}]"
+          return @connection.query('SELECT USERS.* FROM USERS')
+          log(expand(sql, args), name) do
             @connection.query(:hash, sql, *args)
-          #end
+          end
         end
       end
 
