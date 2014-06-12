@@ -721,15 +721,15 @@ module ActiveRecord
       # Returns an array of record hashes with the column names as keys and
       # column values as values.
       def select(sql, name = nil, binds = [])
-        Rails.logger.debug "LOGGING =====> about to run SQL: [#{sql}] --- BINDS ARE: [#{binds}]"
         translate(sql) do |sql, args|
           unless binds.empty?
             args = binds.map { |col, val| type_cast(val, col) } + args
           end
-          Rails.logger.debug "LOGGING =====> ABOUT TO QUERY [#{sql}] with Args: [#{args}]"
+          #
+          # => theSql = sql.gsub(/"/, '')
+          # Added by Karl Kloppenborg, see commit log for details
+          # 
           theSql = sql.gsub(/"/, '')
-          #theSql = sql.gsub(/(["'](.*?)["']\.\*)/, '\2.*')
-          Rails.logger.debug "Logging result: #{theSql}"
           log(expand(theSql, args), name) do
             @connection.query(:hash, theSql, *args)
           end
