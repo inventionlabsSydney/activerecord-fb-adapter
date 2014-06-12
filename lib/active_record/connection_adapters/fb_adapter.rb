@@ -728,7 +728,7 @@ module ActiveRecord
           end
           Rails.logger.debug "LOGGING =====> ABOUT TO QUERY [#{sql}] with Args: [#{args}]"
           theSql = sql.gsub(/(["'](.*?)["']\.\*)/, '\2.*')
-          Rails.logger.debug "Logging result: theSql"
+          Rails.logger.debug "Logging result: #{theSql}"
           log(expand(sql, args), name) do
             @connection.query(:hash, sql, *args)
           end
