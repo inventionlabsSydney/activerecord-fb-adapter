@@ -727,10 +727,10 @@ module ActiveRecord
             args = binds.map { |col, val| type_cast(val, col) } + args
           end
           Rails.logger.debug "LOGGING =====> ABOUT TO QUERY with Args: [#{args}]"
-          
-          log(expand(sql, args), name) do
+
+          #log(expand(sql, args), name) do
             @connection.query(:hash, sql, *args)
-          end
+          #end
         end
       end
 
