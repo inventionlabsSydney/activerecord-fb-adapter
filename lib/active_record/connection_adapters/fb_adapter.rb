@@ -721,7 +721,7 @@ module ActiveRecord
       # Returns an array of record hashes with the column names as keys and
       # column values as values.
       def select(sql, name = nil, binds = [])
-        log("Testing logging goes here!")
+        Rails.logger.info "About to attempt logging!"
         translate(sql) do |sql, args|
           unless binds.empty?
             args = binds.map { |col, val| type_cast(val, col) } + args
