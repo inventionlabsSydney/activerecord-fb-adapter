@@ -727,7 +727,8 @@ module ActiveRecord
             args = binds.map { |col, val| type_cast(val, col) } + args
           end
           Rails.logger.debug "LOGGING =====> ABOUT TO QUERY [#{sql}] with Args: [#{args}]"
-          theSql = sql.gsub(/(["'](.*?)["']\.\*)/, '\2.*')
+          theSql = sql.gsub(/"/, '')
+          #theSql = sql.gsub(/(["'](.*?)["']\.\*)/, '\2.*')
           Rails.logger.debug "Logging result: #{theSql}"
           log(expand(theSql, args), name) do
             @connection.query(:hash, theSql, *args)
