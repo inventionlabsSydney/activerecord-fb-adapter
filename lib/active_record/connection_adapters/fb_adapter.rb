@@ -727,7 +727,7 @@ module ActiveRecord
             args = binds.map { |col, val| type_cast(val, col) } + args
           end
           Rails.logger.debug "LOGGING =====> ABOUT TO QUERY [#{sql}] with Args: [#{args}]"
-          return @connection.query('SELECT USERS.* FROM USERS')
+          Rails.logger.debug @connection.query(:hash, 'SELECT USERS.* FROM USERS')
           log(expand(sql, args), name) do
             @connection.query(:hash, sql, *args)
           end
