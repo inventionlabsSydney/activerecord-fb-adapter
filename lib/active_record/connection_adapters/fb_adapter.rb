@@ -44,6 +44,30 @@ module Arel
         ].compact.join ''
       end
 
+      def visit_Arel_Nodes_Values, o, *a
+        [
+          "VALUES (",
+          ("SET #{o.values.map { |value| value }.join ', '}" unless o.values.empty?),
+          ")"
+        ].compact.join ''
+      end
+      # def visit_Arel_Nodes_Values o, collector
+      #   collector << "VALUES ("
+
+      #   len = o.expressions.length - 1
+      #   o.expressions.zip(o.columns).each_with_index { |(value, attr), i|
+      #     if Nodes::SqlLiteral === value
+      #       collector = visit value, collector
+      #     else
+      #       collector << quote(value, attr && column_for(attr)).to_s
+      #     end
+      #     unless i == len
+      #       collector << ', '
+      #     end
+      #   }
+
+      #   collector << ")"
+      # end
 
     # def visit_Arel_Nodes_InsertStatement o, collector
     #     collector << "INSERT INTO "
