@@ -41,7 +41,7 @@ module Arel
         [
           "INSERT INTO  #{visit(o.relation).gsub(/"/, '')}",
           "(#{o.columns.map { |x| x.name }.join ', '})",
-          " VALUES ()"
+          " VALUES (#{o.values.map { |value| value }.join ', '})"
         ].compact.join ' '
        # [
        #  "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
