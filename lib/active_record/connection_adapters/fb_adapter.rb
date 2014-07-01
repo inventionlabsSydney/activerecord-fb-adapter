@@ -51,6 +51,25 @@ module Arel
       #     ")"
       #   ].compact.join ''
       # end
+      
+      def visit_Arel_Nodes_InsertStatement o, collector
+        collector << "INSERT INTO "
+        collector = visit o.relation, collector
+        if o.columns.any?
+          collector << " (#{o.columns.map { |x|
+            quote_column_name x.name
+          }.join ', '})"
+        end
+
+        if o.values
+          maybe_visit o.values, collector
+        elsif o.select
+          maybe_visit o.select, collector
+        else
+          collector
+        end
+      end
+
       def visit_Arel_Nodes_Values o, collector
         collector << "VALUES ("
 
@@ -68,25 +87,6 @@ module Arel
 
         collector << ")"
       end
-
-    # def visit_Arel_Nodes_InsertStatement o, collector
-    #     collector << "INSERT INTO "
-    #     collector = visit o.relation, collector
-    #     if o.columns.any?
-    #       collector << " (#{o.columns.map { |x|
-    #         quote_column_name x.name
-    #       }.join ', '})"
-    #     end
-
-    #     if o.values
-    #       maybe_visit o.values, collector
-    #     elsif o.select
-    #       maybe_visit o.select, collector
-    #     else
-    #       collector
-    #     end
-    #   end
-
     private
       def limit_offset(o)
         "ROWS #{visit(o.offset.expr) + 1} TO #{visit(o.offset.expr) + visit(o.limit.expr)}"
