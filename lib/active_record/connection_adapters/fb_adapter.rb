@@ -38,7 +38,7 @@ module Arel
         "SKIP #{visit(o.expr)}"
       end
       def visit_Arel_Nodes_InsertStatement o, *a
-        "INSERT INTO #{visit.gsub(/"/, '') o.relation}"
+        "INSERT INTO #{visit(o.relation).gsub(/"/, '')}"
       end
 
 
