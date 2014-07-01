@@ -44,7 +44,7 @@ module Arel
         ].compact.join ''
       end
 
-      def visit_Arel_Nodes_Values, o, *a
+      def visit_Arel_Nodes_Values o, *a
         [
           "VALUES (",
           ("SET #{o.values.map { |value| value }.join ', '}" unless o.values.empty?),
