@@ -23,7 +23,7 @@ module Arel
 
       def visit_Arel_Nodes_UpdateStatement o, *a
         [
-          "UPDATE #{visit o.relation}",
+          "UPDATE #{visit(o.relation).gsub(/"/, '')}",
           ("SET #{o.values.map { |value| visit(value) }.join ', '}" unless o.values.empty?),
           ("WHERE #{o.wheres.map { |x| visit(x) }.join ' AND '}" unless o.wheres.empty?),
           (visit(o.limit) if o.limit),
