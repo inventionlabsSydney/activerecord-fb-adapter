@@ -38,11 +38,11 @@ module Arel
         "SKIP #{visit(o.expr)}"
       end
       def visit_Arel_Nodes_InsertStatement o, *a
-        print o.values.left.inspect
+        #print o.values.left.inspect
         [
           "INSERT INTO  #{visit(o.relation).gsub(/"/, '')}",
           "(#{o.columns.map { |x| x.name }.join ', '})",
-          " VALUES (#{o.values.map { |value| value }.join ', '})"
+          " VALUES (#{o.values.left.map { |value| value }.join ', '})"
         ].compact.join ' '
        # [
        #  "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
