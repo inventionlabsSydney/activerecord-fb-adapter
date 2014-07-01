@@ -37,26 +37,21 @@ module Arel
       def visit_Arel_Nodes_Offset o, *a
         "SKIP #{visit(o.expr)}"
       end
+
+      #
+      # Added by Karl Kloppenborg
+      # GitHub:InventionLabsSydney
+      # Notes: This was added because of an issue with quotations and the fact the db could not be upgraded to a new dialect.
+      # This should still work with all versions though.
+      # 
+
       def visit_Arel_Nodes_InsertStatement o, *a
-        #print o.values.left.inspect
         [
           "INSERT INTO  #{visit(o.relation).gsub(/"/, '')}",
           "(#{o.columns.map { |x| x.name }.join ', '})",
           " VALUES (#{o.values.left.map { |value| value }.join ', '})"
         ].compact.join ' '
-       # [
-       #  "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
-       #  "(#{o.columns.map { |x| x.name }.join ', '})"
-       #  ].compact.join ''
       end
-
-      # def visit_Arel_Nodes_Values o, *a
-      #   [
-      #     "VALUES (",
-      #     ("SET #{o.values.map { |value| value }.join ', '}" unless o.values.empty?),
-      #     ")"
-      #   ].compact.join ''
-      # end
 
     private
       def limit_offset(o)
