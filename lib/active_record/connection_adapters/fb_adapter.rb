@@ -38,7 +38,9 @@ module Arel
         "SKIP #{visit(o.expr)}"
       end
       def visit_Arel_Nodes_InsertStatement o, *a
-        'INSERT INTO "RPIREPORTITEMS" ("ID", "NAME", "REPORTID") VALUES (?, ?, ?)'
+        [
+          "INSERT INTO  #{maybe_visit(o.relation)}() VALUES ()"
+        ].compact.join ' '
        # [
        #  "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
        #  "(#{o.columns.map { |x| x.name }.join ', '})"
