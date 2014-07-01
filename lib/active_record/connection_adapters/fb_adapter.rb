@@ -38,7 +38,10 @@ module Arel
         "SKIP #{visit(o.expr)}"
       end
       def visit_Arel_Nodes_InsertStatement o, *a
-        "INSERT INTO #{visit(o.relation).gsub(/"/, '')}"
+       [
+        "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
+        " (#{o.columns.map { |x| quote_column_name x.name }.join ', '})"
+        ].compact.join ' '
       end
 
 
