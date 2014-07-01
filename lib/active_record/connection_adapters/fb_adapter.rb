@@ -40,8 +40,9 @@ module Arel
       def visit_Arel_Nodes_InsertStatement o, *a
        [
         "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
-        " (#{o.columns.map { |x| quote_column_name x.name }.join ', '})"
-        ].compact.join ' '
+        "(#{o.columns.map { |x| quote_column_name x.name }.join ', '})",
+        " VALUES(#{o.values.map { |value| visit(value) }.join ', '})"
+        ].compact.join ''
       end
 
 
