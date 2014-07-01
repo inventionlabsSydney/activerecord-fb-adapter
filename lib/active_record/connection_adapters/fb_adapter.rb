@@ -38,6 +38,24 @@ module Arel
         "SKIP #{visit(o.expr)}"
       end
 
+      def visit_Arel_Nodes_InsertStatement o, *a
+        *a << "INSERT INTO "
+        *a = visit o.relation, *a
+        if o.columns.any?
+          *a << " (#{o.columns.map { |x|
+            quote_column_name x.name
+          }.join ', '})"
+        end
+
+        if o.values
+          maybe_visit o.values, *a
+        elsif o.select
+          maybe_visit o.select, *a
+        else
+          *a
+        end
+      end
+
     private
       def limit_offset(o)
         "ROWS #{visit(o.offset.expr) + 1} TO #{visit(o.offset.expr) + visit(o.limit.expr)}"
