@@ -39,7 +39,7 @@ module Arel
       end
       def visit_Arel_Nodes_InsertStatement o, *a
         [
-          "INSERT INTO  #{maybe_visit(o.relation)}() VALUES ()"
+          "INSERT INTO  #{visit(o.relation).gsub(/"/, '')}() VALUES ()"
         ].compact.join ' '
        # [
        #  "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
