@@ -37,12 +37,13 @@ module Arel
       def visit_Arel_Nodes_Offset o, *a
         "SKIP #{visit(o.expr)}"
       end
-      # def visit_Arel_Nodes_InsertStatement o, *a
-      #  [
-      #   "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
-      #   "(#{o.columns.map { |x| x.name }.join ', '})"
-      #   ].compact.join ''
-      # end
+      def visit_Arel_Nodes_InsertStatement o, *a
+        super
+       # [
+       #  "INSERT INTO #{visit(o.relation).gsub(/"/, '')}",
+       #  "(#{o.columns.map { |x| x.name }.join ', '})"
+       #  ].compact.join ''
+      end
 
       # def visit_Arel_Nodes_Values o, *a
       #   [
@@ -51,42 +52,7 @@ module Arel
       #     ")"
       #   ].compact.join ''
       # end
-      
-      def visit_Arel_Nodes_InsertStatement o, collector
-        collector << "INSERT INTO "
-        collector = visit o.relation, collector
-        if o.columns.any?
-          collector << " (#{o.columns.map { |x|
-            quote_column_name x.name
-          }.join ', '})"
-        end
 
-        if o.values
-          maybe_visit o.values, collector
-        elsif o.select
-          maybe_visit o.select, collector
-        else
-          collector
-        end
-      end
-
-      def visit_Arel_Nodes_Values o, collector
-        collector << "VALUES ("
-
-        len = o.expressions.length - 1
-        o.expressions.zip(o.columns).each_with_index { |(value, attr), i|
-          if Nodes::SqlLiteral === value
-            collector = visit value, collector
-          else
-            collector << quote(value, attr && column_for(attr)).to_s
-          end
-          unless i == len
-            collector << ', '
-          end
-        }
-
-        collector << ")"
-      end
     private
       def limit_offset(o)
         "ROWS #{visit(o.offset.expr) + 1} TO #{visit(o.offset.expr) + visit(o.limit.expr)}"
