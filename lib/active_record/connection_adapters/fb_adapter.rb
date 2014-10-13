@@ -41,8 +41,7 @@ module Arel
       end
 
       def visit_Arel_Nodes_Limit o, *a
-        raise "Legacy mode: #{@legacy_mode}"
-        "ROWS #{visit(o.expr)}"
+        "ROWS #{visit(o.expr)}" unless @legacy_mode
       end
 
       def visit_Arel_Nodes_Offset o, *a
@@ -66,8 +65,7 @@ module Arel
 
     private
       def limit_offset(o)
-        raise "We got to limit offset"
-        "ROWS #{visit(o.offset.expr) + 1} TO #{visit(o.offset.expr) + visit(o.limit.expr)}"
+        "ROWS #{visit(o.offset.expr) + 1} TO #{visit(o.offset.expr) + visit(o.limit.expr)}" unless @legacy_mode
       end
     end
   end
