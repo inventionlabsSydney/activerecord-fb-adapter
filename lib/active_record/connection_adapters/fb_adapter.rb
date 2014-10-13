@@ -689,11 +689,13 @@ module ActiveRecord
       # generates
       #  SELECT * FROM suppliers LIMIT 10 OFFSET 50
       def add_limit_offset!(sql, options) # :nodoc:
+        unless (@config.has_key[:legacy] and @config[:create].eql? true)
         if limit = options[:limit]
-          if offset = options[:offset]
-            sql << " ROWS #{offset.to_i + 1} TO #{offset.to_i + limit.to_i}"
-          else
-            sql << " ROWS #{limit.to_i}"
+            if offset = options[:offset]
+              sql << " ROWS #{offset.to_i + 1} TO #{offset.to_i + limit.to_i}"
+            else
+              sql << " ROWS #{limit.to_i}"
+            end
           end
         end
         sql

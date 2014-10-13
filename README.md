@@ -49,6 +49,7 @@ development:
   host: localhost
   encoding: UTF-8
   create: true
+  legacy: false
 ```
 
 The default Firebird administrator username and password are **SYSDBA** and **masterkey**, you may have to adjust this to your installation.
@@ -82,6 +83,9 @@ which will add write permission to "others" group.
 6) Now you can start generating scaffolds or models and rails will create the corresponding migrations. Use **bundle exec rake db:migrate** and **bundle exec rake db:rollback** for migrating the database; this will update your **db/schema.rb** file automatically.
 
 ## Changelog
+
+#### 0.8.9
+- Added "legacy" mode to allow Firebird < 2.0 to work with this gem.
 
 #### 0.8.2
 - Fix "singleton can't be dumped" marshaling error.
