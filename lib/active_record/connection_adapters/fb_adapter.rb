@@ -31,7 +31,7 @@ module Arel
       end
 
       def visit_Arel_Nodes_Limit o, *a
-        raise "We got here! arel nodes limit"
+        raise "We got here! arel nodes limit #{@config}"
         "ROWS #{visit(o.expr)}"
       end
 
