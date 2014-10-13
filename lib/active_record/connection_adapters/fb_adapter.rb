@@ -713,7 +713,11 @@ module ActiveRecord
         end
         sql
       end
-      
+
+      def legacy_mode
+        true if @config.has_key? :legacy and @config[:legacy].eql? true
+      end
+
       def default_sequence_name(table_name, column = nil)
         "#{table_name.to_s[0, table_name_length - 4]}_seq"
       end
@@ -721,11 +725,13 @@ module ActiveRecord
       # Set the sequence to the max value of the table's column.
       def reset_sequence!(table, column, sequence = nil)
         max_id = select_value("select max(#{column}) from #{table}")
-        execute("alter sequence #{default_sequence_name(table, column)} restart with #{max_id}")
+        execute("alter sequence #{default_sequence_name(table, column)} restart with #{max_id}") unless legacy_mode
+        execute("SET GENERATOR #{default_sequence_name(table, column)} TO #{max_id}") if legacy_mode
       end
 
       def next_sequence_value(sequence_name)
-        select_one("SELECT NEXT VALUE FOR #{sequence_name} FROM RDB$DATABASE").values.first
+        select_one("SELECT NEXT VALUE FOR #{sequence_name} FROM RDB$DATABASE").values.first unless legacy_mode
+        select_one("SELECT GEN_ID(#{sequence_name}, 1) FROM RDB$DATABASE").values.first if legacy_mode
       end
 
       # Inserts the given fixture into the table. Overridden in adapters that require
