@@ -10,6 +10,8 @@ module Arel
     class FB < Arel::Visitors::ToSql
     protected
 
+    @legacy_mode = false
+
       def visit_Arel_Nodes_SelectStatement o, *a
         select_core = o.cores.map { |x| visit_Arel_Nodes_SelectCore(x, *a) }.join
         select_core.sub!(/^\s*SELECT/i, "SELECT #{visit(o.offset)}") if o.offset && !o.limit
@@ -31,7 +33,7 @@ module Arel
       end
 
       def visit_Arel_Nodes_Limit o, *a
-        raise "We got here! arel nodes limit #{@config}"
+        raise "Legacy mode: #{@legacy_mode}"
         "ROWS #{visit(o.expr)}"
       end
 
@@ -52,6 +54,10 @@ module Arel
           "(#{o.columns.map { |x| x.name }.join ', '})",
           " VALUES (#{o.values.left.map { |value| value }.join ', '})"
         ].compact.join ' '
+      end
+
+      def set_legacy_mode(config)
+        @legacy_mode = true if config.has_key? :legacy and config[:legacy].eql? true
       end
 
     private
@@ -277,10 +283,13 @@ module ActiveRecord
         super(connection, logger)
         @config = config
         @visitor = Arel::Visitors::FB.new(self)
+        @visitor.set_legacy_mode(@config)
       end
 
       def self.visitor_for(pool) # :nodoc:
-        Arel::Visitors::FB.new(pool)
+        vispool = Arel::Visitors::FB.new(pool)
+        vispool.set_legacy_mode(@config)
+        vispool
       end
 
       # Returns the human-readable name of the adapter.  Use mixed case - one
