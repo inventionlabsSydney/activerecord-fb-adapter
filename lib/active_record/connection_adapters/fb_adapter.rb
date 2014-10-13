@@ -689,6 +689,7 @@ module ActiveRecord
       # generates
       #  SELECT * FROM suppliers LIMIT 10 OFFSET 50
       def add_limit_offset!(sql, options) # :nodoc:
+        raise "We have this here"
         unless (@config.has_key[:legacy] and @config[:legacy].eql? true)
           if limit = options[:limit]
             if offset = options[:offset]
