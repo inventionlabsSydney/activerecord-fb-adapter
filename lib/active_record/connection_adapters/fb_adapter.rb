@@ -8,6 +8,14 @@ require 'base64'
 module Arel
   module Visitors
     class FB < Arel::Visitors::ToSql
+      #
+      # Added by Karl Kloppenborg
+      # GitHub: InventionLabsSydney
+      # Notes: This engages a legacy mode option so we can cater for less than 2.0 versions of firebase
+      # 
+      def set_legacy_mode(config)
+        @legacy_mode = true if config.has_key? :legacy and config[:legacy].eql? true
+      end
     protected
 
     @legacy_mode = false
@@ -54,10 +62,6 @@ module Arel
           "(#{o.columns.map { |x| x.name }.join ', '})",
           " VALUES (#{o.values.left.map { |value| value }.join ', '})"
         ].compact.join ' '
-      end
-
-      def set_legacy_mode(config)
-        @legacy_mode = true if config.has_key? :legacy and config[:legacy].eql? true
       end
 
     private
