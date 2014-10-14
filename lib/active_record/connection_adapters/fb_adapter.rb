@@ -834,7 +834,7 @@ module ActiveRecord
                  COALESCE(r.rdb$null_flag, f.rdb$null_flag) rdb$null_flag
           FROM rdb$relation_fields r
           JOIN rdb$fields f ON r.rdb$field_source = f.rdb$field_name
-          WHERE r.rdb$relation_name = '#{ar_to_fb_case(table_name)}'
+          WHERE r.rdb$relation_name = '#{table_name}'
           ORDER BY r.rdb$field_position
         END_SQL
         select_rows(sql, name).collect do |field|
