@@ -730,8 +730,9 @@ module ActiveRecord
       end
 
       def next_sequence_value(sequence_name)
-        select_one("SELECT NEXT VALUE FOR #{sequence_name} FROM RDB$DATABASE").values.first unless legacy_mode
-        select_one("SELECT GEN_ID(#{sequence_name}, 1) FROM RDB$DATABASE").values.first if legacy_mode
+        #select_one("SELECT NEXT VALUE FOR #{sequence_name} FROM RDB$DATABASE").values.first unless legacy_mode
+        select_one("SELECT GEN_ID(#{sequence_name}, 1) FROM RDB$DATABASE").values.first
+
       end
 
       # Inserts the given fixture into the table. Overridden in adapters that require
